@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${employee.firstName + ' ' + employee.lastName}">Update Employee</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container mt-4">
+    <h1 class="mb-4" th:text="'Update ' + ${employee.firstName} + ' ' + ${employee.lastName}">Update Employee</h1>
+
+    <form id="updateForm" th:action="@{/employees/update}" th:object="${employee}" method="post">
+
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="row mb-3">
+            <div class="col">
+                <label for="firstName" class="form-label">First Name</label>
+                <input type="text" th:field="*{firstName}" class="form-control" id="firstName" required>
+            </div>
+            <div class="col">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input type="text" th:field="*{lastName}" class="form-control" id="lastName" required>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" th:field="*{email}" class="form-control" id="email" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="department" class="form-label">Department</label>
+            <select th:field="*{department.id}" class="form-select" id="department">
+                <option value="">-- Select Department --</option>
+                <option th:each="dept : ${departments}"
+                        th:value="${dept.id}"
+                        th:text="${dept.name}"></option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="position" class="form-label">Position</label>
+            <select th:field="*{position.id}" class="form-select" id="position">
+                <option value="">-- Select Position --</option>
+                <option th:each="pos : ${positions}"
+                        th:value="${pos.id}"
+                        th:text="${pos.title}"></option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="role" class="form-label">Role</label>
+            <select th:field="*{role.id}" class="form-select" id="role">
+                <option value="">-- Select Role --</option>
+                <option th:each="r : ${roles}"
+                        th:value="${r.id}"
+                        th:text="${r.name}"></option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="manager" class="form-label">Manager</label>
+            <select th:field="*{manager.id}" class="form-select" id="manager">
+                <option value="">None</option>
+                <option th:each="m : ${employees}"
+                        th:if="${m.id != employee.id}"
+                        th:value="${m.id}"
+                        th:text="${m.firstName + ' ' + m.lastName}"></option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="contract" class="form-label">Contract</label>
+            <select th:field="*{contract.id}" class="form-select" id="contract">
+                <option value="">-- Select Contract --</option>
+                <option th:each="c : ${contracts}"
+                        th:value="${c.id}"
+                        th:text="${c.type}"></option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="salaryAmount" class="form-label">Current Salary</label>
+            <input type="number" step="0.01" th:value="${currentSalary}" name="salaryAmount" class="form-control" id="salaryAmount" required>
+        </div>
+
+    </form>
+
+    <div class="d-flex gap-2 mt-4">
+        <button type="submit" form="updateForm" class="btn btn-primary">Update</button>
+
+        <form th:action="@{/employees/delete/{id}(id=${employee.id})}" method="post">
+            <button type="submit" class="btn btn-danger"
+                    onclick="return confirm('Are you sure you want to delete this employee?');">
+                Delete
+            </button>
+        </form>
+
+        <a th:href="@{/employees}" class="btn btn-secondary">Back to Employees</a>
+    </div>
+
+    <br/><br/>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
